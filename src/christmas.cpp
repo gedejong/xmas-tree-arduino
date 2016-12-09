@@ -90,8 +90,19 @@ void loop() {
   pixels.show(); 
   delay(DELAYVAL);
 
-  if (Serial.available() > 0) {
-    twinkle = Serial.read();
-    Serial.readBytes(targetColors, NUMPIXELS * 3);
+  while (Serial.available() > 0) {
+      uint8_t command = Serial.read();
+      if (command == 0) {
+          // Led light
+          uint8_t pixelNumber = Serial.read();
+          uint8_t red = Serial.read();
+          uint8_t green = Serial.read();
+          uint8_t blue = Serial.read();
+          targetColors[pixelNumber * 3] = red;
+          targetColors[pixelNumber * 3 + 1] = green;
+          targetColors[pixelNumber * 3 + 2] = blue;
+      } else if (command == 1) {
+        twinkle = Serial.read();
+      }
   }
 }
