@@ -47,15 +47,15 @@ void setup() {
 }
 
 float gettr(int pos) {
-  return targetColors[pos * 3] * (.8 + .2 * sin(.03 * (tick + pos)));
+  return targetColors[pos * 3] * (.9 + .1 * sin(.03 * (tick + pos)));
 }
 
 float gettg(int pos) {
-  return targetColors[pos * 3 + 1] * (.8 + .2 * sin(.05 * (tick + pos)));
+  return targetColors[pos * 3 + 1] * (.9 + .1 * sin(.05 * (tick + pos)));
 }
 
 float gettb(int pos) {
-  return targetColors[pos * 3 + 2] * (.8 + .2 * sin(.04 * (tick + pos)));
+  return targetColors[pos * 3 + 2] * (.9 + .1 * sin(.04 * (tick + pos)));
 }
 
 void setGammaColor(int pixelNumber, uint8_t red, uint8_t green, uint8_t blue) {
@@ -89,20 +89,28 @@ void loop() {
   }
   pixels.show(); 
   delay(DELAYVAL);
-
   while (Serial.available() > 0) {
-      uint8_t command = Serial.read();
-      if (command == 0) {
-          // Led light
-          uint8_t pixelNumber = Serial.read();
-          uint8_t red = Serial.read();
-          uint8_t green = Serial.read();
-          uint8_t blue = Serial.read();
-          targetColors[pixelNumber * 3] = red;
-          targetColors[pixelNumber * 3 + 1] = green;
-          targetColors[pixelNumber * 3 + 2] = blue;
-      } else if (command == 1) {
-        twinkle = Serial.read();
-      }
+    uint8_t command = Serial.read();
+    if (command == 0) {
+        // target Led light
+        while (Serial.available() < 4);
+        uint8_t pixelNumber = Serial.read();
+        uint8_t red = Serial.read();
+        uint8_t green = Serial.read();
+        uint8_t blue = Serial.read();
+        targetColors[pixelNumber * 3] = red;
+        targetColors[pixelNumber * 3 + 1] = green;
+        targetColors[pixelNumber * 3 + 2] = blue;
+    } else if (command == 1) {
+        while (Serial.available() < 1);
+    twinkle = Serial.read();
+    } else if (command == 2) {
+        while (Serial.available() < 4);
+        uint8_t pixelNumber = Serial.read();
+        uint8_t red = Serial.read();
+        uint8_t green = Serial.read();
+        uint8_t blue = Serial.read();
+        setGammaColor(pixelNumber, red, green, blue);
+    }
   }
 }
