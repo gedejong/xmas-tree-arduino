@@ -79,7 +79,8 @@ void loop() {
       ng = g + sgn(tg - g) + (tg - g) / 16, 
       nb = b + sgn(tb - b) + (tb - b) / 16;
 
-    if (FLICKERING && (rand() % (twinkle*3) ) == 0) {
+    if (FLICKERING && twinkle != 255 && (rand() % (twinkle*3) ) == 0) {
+        // twinkle = 255 stops twinkling all together
       nr = min(255, nr * 2);
       ng = min(255, ng * 2);
       nb = min(255, nb * 2);
@@ -103,7 +104,7 @@ void loop() {
         targetColors[pixelNumber * 3 + 2] = blue;
     } else if (command == 1) {
         while (Serial.available() < 1);
-    twinkle = Serial.read();
+        twinkle = Serial.read();
     } else if (command == 2) {
         while (Serial.available() < 4);
         uint8_t pixelNumber = Serial.read();
